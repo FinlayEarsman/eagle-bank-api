@@ -1,6 +1,5 @@
 package com.eaglebank.eaglebank_api.v1.dto;
 
-import com.eaglebank.eaglebank_api.v1.model.Address;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

@@ -6,9 +6,10 @@ import java.util.Optional;
 
 public interface UserService {
     UserModel createUser(UserModel user);
-    Optional<UserModel> getUserById(Long id);
+    Optional<UserModel> getUserById(String username, Long id);
+    Optional<UserModel> getUserByEmail(String email);
     Optional<UserModel> updateUser(UserModel user);
-    boolean deleteUser(Long id);
+    boolean deleteUser(String username, Long id);
 }
 
 
