@@ -1,14 +1,16 @@
 package com.eaglebank.eaglebank_api.v1.service;
 
-import com.eaglebank.eaglebank_api.v1.model.UserModel;
+import com.eaglebank.eaglebank_api.v1.dto.UserRegistrationDto;
+import com.eaglebank.eaglebank_api.v1.dto.UserResponseDto;
+import com.eaglebank.eaglebank_api.v1.dto.UserUpdateDto;
 
 import java.util.Optional;
 
 public interface UserService {
-    UserModel createUser(UserModel user);
-    Optional<UserModel> getUserById(String username, Long id);
-    Optional<UserModel> getUserByEmail(String email);
-    Optional<UserModel> updateUser(UserModel user);
+    UserResponseDto createUser(UserRegistrationDto user);
+    Optional<UserResponseDto> getUserById(String username, Long id);
+    Optional<UserResponseDto> getUserByEmail(String email);
+    Optional<UserResponseDto> updateUser(String username, String id, UserUpdateDto user);
     boolean deleteUser(String username, Long id);
 }
 

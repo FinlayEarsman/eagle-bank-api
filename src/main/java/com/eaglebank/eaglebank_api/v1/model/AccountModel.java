@@ -16,7 +16,7 @@ public class AccountModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNumber;
 
-    private Double balance;
+    private Integer balance;
     private String accountType;
     private String sortCode;
     private String name;
@@ -25,6 +25,9 @@ public class AccountModel {
     private String createdTimestamp;
     @UpdateTimestamp
     private String updatedTimestamp;
+
+    @Version
+    private Long version;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

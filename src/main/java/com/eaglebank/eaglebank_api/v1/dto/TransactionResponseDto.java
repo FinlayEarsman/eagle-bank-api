@@ -4,17 +4,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @Builder
-public class AccountDto {
+public class TransactionResponseDto {
+    private String id;
     private String accountNumber;
-    private String name;
-    private String sortCode;
-    private String accountType;
-    private Integer balance;
+    private String type;
+    private Double amount;
     private String currency;
+    private String reference;
+    private String userId;
     private String createdTimestamp;
-    private String updatedTimestamp;
 
 }

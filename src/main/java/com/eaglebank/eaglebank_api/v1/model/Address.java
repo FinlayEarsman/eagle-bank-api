@@ -2,15 +2,15 @@ package com.eaglebank.eaglebank_api.v1.model;
 
 import com.eaglebank.eaglebank_api.v1.dto.AddressDto;
 import jakarta.persistence.Embeddable;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 @Getter
 @Setter
 @Builder
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class Address {
     private String line1;
     private String line2;

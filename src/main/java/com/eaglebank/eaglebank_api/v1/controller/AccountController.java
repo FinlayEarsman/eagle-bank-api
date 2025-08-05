@@ -3,6 +3,7 @@ package com.eaglebank.eaglebank_api.v1.controller;
 
 import com.eaglebank.eaglebank_api.v1.dto.AccountCreateDto;
 import com.eaglebank.eaglebank_api.v1.dto.AccountDto;
+import com.eaglebank.eaglebank_api.v1.dto.AccountListDto;
 import com.eaglebank.eaglebank_api.v1.exception.InvalidUserException;
 import com.eaglebank.eaglebank_api.v1.service.AccountService;
 import com.eaglebank.eaglebank_api.v1.service.impl.UserServiceImpl;
@@ -39,14 +40,14 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AccountDto>> listAccounts() {
+    public ResponseEntity<AccountListDto> listAccounts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = auth.getName();
 
         List<AccountDto> accounts = accountService.getAccountsByUser(currentUsername).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No accounts found for user")
         );
-        return ResponseEntity.ok(accounts);
+        return ResponseEntity.ok(AccountListDto.builder().accounts(accounts).build());
     }
 
     @GetMapping("/{accountId}")
@@ -66,7 +67,7 @@ public class AccountController {
     }
 
     @PatchMapping("/{accountId}")
-    public ResponseEntity<AccountDto> updateAccount(@PathVariable Long accountId, @RequestBody AccountDto accountDto) {
+    public ResponseEntity<AccountDto> updateAccount(@PathVariable Long accountId, @RequestBody AccountCreateDto accountDto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = auth.getName();
 

@@ -10,6 +10,6 @@ public interface AccountService {
     Optional<AccountDto> getAccountById(String username, Long accountId);
     Optional<List<AccountDto>> getAccountsByUser(String username);
     AccountDto createAccount(String username, AccountCreateDto accountDto);
-    AccountDto updateAccount(String username, Long accountId, AccountDto accountDto);
+    AccountDto updateAccount(String username, Long accountId, AccountCreateDto accountDto);
     void deleteAccount(String username, Long accountId);
 }

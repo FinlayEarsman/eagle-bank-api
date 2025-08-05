@@ -27,4 +27,12 @@ public class AddressDto {
                 .postcode(this.postcode)
                 .build();
     }
+
+    public boolean isValid() {
+        return line1 != null && !line1.isEmpty() &&
+                line2 != null && line3 != null &&
+                town != null && !town.isEmpty() &&
+                county != null && !county.isEmpty() &&
+                postcode != null && !postcode.isEmpty();
+    }
 }
