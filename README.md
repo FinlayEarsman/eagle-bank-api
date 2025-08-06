@@ -27,3 +27,4 @@
 ### Still to Do
 1. **Unit Tests**: Add more unit tests for individual components to ensure robustness.
 2. **Robust Error Handling**: Improve error handling through implementing further response types, and give more accurate error messages, to provide more informative responses.
+3. **Input Validation**: Implement further input validation such as checking formats and apply regex where applicable.

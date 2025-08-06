@@ -30,13 +30,13 @@ public class AuthController {
 
     @PostMapping(value = "/login", produces = "application/json")
     public ResponseEntity<AuthResponseDto> authenticate(@RequestBody AuthRequestDto request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             final UserDetails user = userService.loadUserByUsername(request.getUsername());
             final String jwt = jwtUtil.generateToken(user);
             return ResponseEntity.ok(new AuthResponseDto(jwt));
-        } catch (UsernameNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(401).body(new AuthResponseDto("Authentication failed: " + e.getMessage()));
         }
     }
