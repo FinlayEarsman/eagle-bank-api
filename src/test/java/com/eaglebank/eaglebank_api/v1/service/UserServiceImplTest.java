@@ -32,7 +32,7 @@ class UserServiceImplTest {
     void createUserShouldCreateUserWhenValid() {
         UserRegistrationDto dto = mock(UserRegistrationDto.class);
         when(dto.getEmail()).thenReturn("test@example.com");
-        when(dto.isValid()).thenReturn(true);
+        when(dto.getInvalidField()).thenReturn(null);
         when(dto.getPassword()).thenReturn("pass");
         when(passwordEncoder.encode(anyString())).thenReturn("encoded");
         when(userRepository.findByEmail(anyString())).thenReturn(null);
@@ -74,7 +74,7 @@ class UserServiceImplTest {
     @Test
     void updateUserShouldUpdateWhenMatches() {
         UserUpdateDto updateDto = mock(UserUpdateDto.class);
-        when(updateDto.isValid()).thenReturn(true);
+        when(updateDto.getInvalidField()).thenReturn(null);
         when(updateDto.getName()).thenReturn("New Name");
         when(updateDto.getEmail()).thenReturn("test@example.com");
 

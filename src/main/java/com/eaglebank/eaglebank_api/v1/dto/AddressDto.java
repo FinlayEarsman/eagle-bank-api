@@ -28,11 +28,25 @@ public class AddressDto {
                 .build();
     }
 
-    public boolean isValid() {
-        return line1 != null && !line1.isEmpty() &&
-                line2 != null && line3 != null &&
-                town != null && !town.isEmpty() &&
-                county != null && !county.isEmpty() &&
-                postcode != null && !postcode.isEmpty();
+    public String getInvalidField() {
+        if (line1 == null || line1.isEmpty()) {
+            return "line1";
+        }
+        if (line2 == null) {
+            return "line2";
+        }
+        if (line3 == null) {
+            return "line3";
+        }
+        if (town == null || town.isEmpty()) {
+            return "town";
+        }
+        if (county == null || county.isEmpty()) {
+            return "county";
+        }
+        if (postcode == null || postcode.isEmpty()) {
+            return "postcode";
+        }
+        return null;
     }
 }

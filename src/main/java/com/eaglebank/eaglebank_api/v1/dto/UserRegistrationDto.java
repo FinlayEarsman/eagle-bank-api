@@ -14,11 +14,22 @@ public class UserRegistrationDto {
     private String phoneNumber;
     private AddressDto address;
 
-    public boolean isValid() {
-        return email != null && !email.isEmpty() &&
-               password != null && !password.isEmpty() &&
-               name != null && !name.isEmpty() &&
-               phoneNumber != null && !phoneNumber.isEmpty() &&
-               address != null && address.isValid();
+    public String getInvalidField() {
+        if (email == null || email.isEmpty()) {
+            return "email";
+        }
+        if (password == null || password.isEmpty()) {
+            return "password";
+        }
+        if (name == null || name.isEmpty()) {
+            return "name";
+        }
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            return "phoneNumber";
+        }
+        if (address == null || address.getInvalidField() != null) {
+            return (address == null) ? "address" : "address." + address.getInvalidField();
+        }
+        return null;
     }
 }

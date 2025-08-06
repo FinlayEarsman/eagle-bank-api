@@ -4,6 +4,7 @@ package com.eaglebank.eaglebank_api.v1.controller;
 import com.eaglebank.eaglebank_api.v1.dto.AccountCreateDto;
 import com.eaglebank.eaglebank_api.v1.dto.AccountDto;
 import com.eaglebank.eaglebank_api.v1.dto.AccountListDto;
+import com.eaglebank.eaglebank_api.v1.exception.InvalidFieldException;
 import com.eaglebank.eaglebank_api.v1.exception.InvalidUserException;
 import com.eaglebank.eaglebank_api.v1.service.AccountService;
 import com.eaglebank.eaglebank_api.v1.service.impl.UserServiceImpl;
@@ -26,20 +27,20 @@ public class AccountController {
     @Autowired
     private UserServiceImpl userService;
 
-    @PostMapping
+    @PostMapping(produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountCreateDto accountDto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = auth.getName();
 
-        if (!accountDto.isValid()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required data");
+        if (accountDto.getInvalidField() != null) {
+            throw new InvalidFieldException(accountDto.getInvalidField(), "Missing required data", "String");
         }
 
         AccountDto created = accountService.createAccount(userEmail, accountDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @GetMapping
+    @GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountListDto> listAccounts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = auth.getName();
@@ -50,7 +51,7 @@ public class AccountController {
         return ResponseEntity.ok(AccountListDto.builder().accounts(accounts).build());
     }
 
-    @GetMapping("/{accountId}")
+    @GetMapping(value="/{accountId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDto> getAccount(@PathVariable Long accountId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = auth.getName();
@@ -58,7 +59,7 @@ public class AccountController {
         AccountDto account;
         try {
             account = accountService.getAccountById(currentUsername, accountId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found")) ;
         } catch (InvalidUserException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied to account");
         }
@@ -66,10 +67,14 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
-    @PatchMapping("/{accountId}")
+    @PatchMapping(value="/{accountId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountDto> updateAccount(@PathVariable Long accountId, @RequestBody AccountCreateDto accountDto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = auth.getName();
+
+        if (accountDto.getInvalidField() != null) {
+            throw new InvalidFieldException(accountDto.getInvalidField(), "Missing required data", "String");
+        }
 
         AccountDto updated;
         try {
@@ -82,7 +87,7 @@ public class AccountController {
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{accountId}")
+    @DeleteMapping(value="/{accountId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteAccount(@PathVariable Long accountId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = auth.getName();

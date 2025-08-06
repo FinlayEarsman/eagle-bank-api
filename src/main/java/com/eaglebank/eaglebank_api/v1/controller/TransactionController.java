@@ -7,6 +7,7 @@ import com.eaglebank.eaglebank_api.v1.exception.InvalidUserException;
 import com.eaglebank.eaglebank_api.v1.service.impl.TransactionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +23,7 @@ public class TransactionController {
     @Autowired
     private TransactionServiceImpl transactionService;
 
-    @PostMapping
+    @PostMapping(produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TransactionResponseDto> executeTransaction(@PathVariable String accountNumber, @RequestBody TransactionDto transactionDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -37,7 +38,7 @@ public class TransactionController {
         return ResponseEntity.status(201).body(transaction);
     }
 
-    @GetMapping
+    @GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TransactionListResponseDto> listTransactions(@PathVariable String accountNumber) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -52,7 +53,7 @@ public class TransactionController {
         return ResponseEntity.ok(TransactionListResponseDto.builder().transactions(transactions).build());
     }
 
-    @GetMapping("/{transactionId}")
+    @GetMapping(value="/{transactionId}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TransactionResponseDto> getTransaction(@PathVariable String accountNumber, @PathVariable String transactionId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();

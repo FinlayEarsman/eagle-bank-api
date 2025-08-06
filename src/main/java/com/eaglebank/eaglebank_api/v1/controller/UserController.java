@@ -8,6 +8,7 @@ import com.eaglebank.eaglebank_api.v1.exception.UserDeleteForbiddenException;
 import com.eaglebank.eaglebank_api.v1.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,18 +24,15 @@ public class UserController {
     private UserServiceImpl userService;
 
 
-    @PostMapping
+    @PostMapping(produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRegistrationDto userDto) {
         UserResponseDto createdUser;
-        try {
-            createdUser = userService.createUser(userDto);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user data: " + e.getMessage());
-        }
+
+        createdUser = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponseDto> getUser(@PathVariable String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -50,7 +48,7 @@ public class UserController {
          return ResponseEntity.ok(foundUser);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping(value="/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable String id, @RequestBody UserUpdateDto userDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -66,7 +64,7 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value="/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();

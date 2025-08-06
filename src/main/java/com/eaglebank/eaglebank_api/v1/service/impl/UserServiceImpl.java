@@ -3,6 +3,7 @@ package com.eaglebank.eaglebank_api.v1.service.impl;
 import com.eaglebank.eaglebank_api.v1.dto.UserRegistrationDto;
 import com.eaglebank.eaglebank_api.v1.dto.UserResponseDto;
 import com.eaglebank.eaglebank_api.v1.dto.UserUpdateDto;
+import com.eaglebank.eaglebank_api.v1.exception.InvalidFieldException;
 import com.eaglebank.eaglebank_api.v1.exception.InvalidUserException;
 import com.eaglebank.eaglebank_api.v1.exception.UserDeleteForbiddenException;
 import com.eaglebank.eaglebank_api.v1.model.UserModel;
@@ -26,10 +27,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(UserRegistrationDto userDto) {
         if (userRepository.findByEmail(userDto.getEmail()) != null) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new InvalidFieldException("email", "String", "Email already exists");
         }
-        if (!userDto.isValid()) {
-            throw new IllegalArgumentException("Invalid user data: " + userDto);
+        if (userDto.getInvalidField() != null) {
+        throw new InvalidFieldException(userDto.getInvalidField(), "String", "Missing required data");
         }
 
         UserModel user = UserModel.builder()
@@ -58,9 +59,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserResponseDto> updateUser(String username, String id, UserUpdateDto user) {
-        if (!user.isValid()) {
-            throw new IllegalArgumentException("Invalid user data: " + user);
+    public Optional<UserResponseDto> updateUser(String username, String id, UserUpdateDto userDto) {
+        if (userRepository.findByEmail(userDto.getEmail()) != null) {
+            throw new InvalidFieldException("email", "String", "Email already exists");
+        }
+        if (userDto.getInvalidField() != null) {
+            throw new InvalidFieldException(userDto.getInvalidField(),userDto.getInvalidField().equals("address") ? "Object" : "String", "Missing required data");
         }
 
         UserModel foundUser = userRepository.findById(Long.valueOf(id))
@@ -68,10 +72,10 @@ public class UserServiceImpl implements UserService {
         if (!foundUser.getEmail().equals(username)) {
             throw new InvalidUserException("User does not match the provided username");
         }
-        foundUser.setName(user.getName());
-        foundUser.setPhoneNumber(user.getPhoneNumber());
-        foundUser.setAddress(user.getAddress() != null ? user.getAddress().toModel() : null);
-        foundUser.setEmail(user.getEmail());
+        foundUser.setName(userDto.getName());
+        foundUser.setPhoneNumber(userDto.getPhoneNumber());
+        foundUser.setAddress(userDto.getAddress() != null ? userDto.getAddress().toModel() : null);
+        foundUser.setEmail(userDto.getEmail());
 
         return Optional.of(toDto(userRepository.save(foundUser)));
     }

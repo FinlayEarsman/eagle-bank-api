@@ -14,11 +14,20 @@ public class UserUpdateDto {
     private String phoneNumber;
     private AddressDto address;
 
-    public boolean isValid() {
-        return email != null && !email.isEmpty() &&
-               name != null && !name.isEmpty() &&
-               phoneNumber != null && !phoneNumber.isEmpty() &&
-               address != null && address.isValid();
+    public String getInvalidField() {
+        if (email == null || email.isEmpty()) {
+            return "email";
+        }
+        if (name == null || name.isEmpty()) {
+            return "name";
+        }
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            return "phoneNumber";
+        }
+        if (address == null || address.getInvalidField() != null) {
+            return (address == null) ? "address" : "address." + address.getInvalidField();
+        }
+        return null;
     }
 
 }

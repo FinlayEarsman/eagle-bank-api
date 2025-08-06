@@ -2,6 +2,7 @@ package com.eaglebank.eaglebank_api.v1.service.impl;
 
 import com.eaglebank.eaglebank_api.v1.dto.TransactionDto;
 import com.eaglebank.eaglebank_api.v1.dto.TransactionResponseDto;
+import com.eaglebank.eaglebank_api.v1.exception.InvalidFieldException;
 import com.eaglebank.eaglebank_api.v1.model.AccountModel;
 import com.eaglebank.eaglebank_api.v1.model.TransactionModel;
 import com.eaglebank.eaglebank_api.v1.model.UserModel;
@@ -62,8 +63,8 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionResponseDto executeTransaction(String username, String accountNumber, TransactionDto transactionDto) {
         UserModel user = userRepository.findByEmail(username);
         AccountModel account = accountRepository.findById(Long.valueOf(accountNumber)).orElseThrow(() -> new IllegalArgumentException("Account not found with number: " + accountNumber));
-        if (!transactionDto.isValid()) {
-            throw new IllegalArgumentException("Transaction invalid");
+        if (transactionDto.getInvalidField() != null) {
+            throw new InvalidFieldException(transactionDto.getInvalidField(), "String", "Missing required data");
         }
 
         if ("deposit".equalsIgnoreCase(transactionDto.getType())) {

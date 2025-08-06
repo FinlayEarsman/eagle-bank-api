@@ -11,8 +11,13 @@ public class AccountCreateDto {
     private String name;
     private String accountType;
 
-    public boolean isValid() {
-        return name != null && !name.isEmpty() &&
-               accountType != null && !accountType.isEmpty();
+    public String getInvalidField() {
+        if (name == null || name.isEmpty()) {
+            return "name";
+        }
+        if (accountType == null || accountType.isEmpty()) {
+            return "accountType";
+        }
+        return null;
     }
 }

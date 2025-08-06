@@ -14,10 +14,19 @@ public class TransactionDto {
     private String type;
     private String reference;
 
-    public boolean isValid() {
-        return amount != null && amount > 0 &&
-               currency != null && !currency.isEmpty() &&
-               type != null && !type.isEmpty() &&
-               reference != null && !reference.isEmpty();
+    public String getInvalidField () {
+        if (amount == null || amount <= 0) {
+            return "amount";
+        }
+        if (currency == null || currency.isEmpty()) {
+            return "currency";
+        }
+        if (type == null || type.isEmpty()) {
+            return "type";
+        }
+        if (reference == null || reference.isEmpty()) {
+            return "reference";
+        }
+        return null;
     }
 }
